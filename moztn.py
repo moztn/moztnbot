@@ -11,6 +11,7 @@ import time
 PORT=6667
 #NICK=sys.argv[2]
 HOST='irc.mozilla.org'
+#HOST='irc.recycled-irc.net'
 NICK='moztn'
 IDENT="MozillaTunisiaBot"
 REALNAME="moztnBot"
@@ -41,11 +42,16 @@ def MakeAction(msg):
 			return
 		if(msg.find('moztn') is not -1):
 			s.send("PRIVMSG %s :%s, %s\r\n" % (GetChannel(msg),GetUname(msg),RandMentionResponse())) 
-
+		if(msg.find('!help') is not -1):
+			print 'Help cmd detected !'
+			s.send("PRIVMSG %s :%s, Sorry, my master is too lasy to implement this :( you can maybe help on github.com/moztn/moztnbot ?\r\n" % (GetChannel(msg),GetUname(msg)))
 	if(msg.find('INVITE') is not -1):
 		joinChannel(msg)
 
 
+
+def GetCmd(msg):
+	return
 def GetMsg(msg):
   msg = msg[msg.find('PRIVMSG'):]
   msg = msg[msg.find(':')+1:]
