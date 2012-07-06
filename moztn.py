@@ -12,12 +12,12 @@ PORT=6667
 #NICK=sys.argv[2]
 HOST='irc.mozilla.org'
 NICK='moztn'
-IDENT="Mozilla Tunisia Bot"
+IDENT="MozillaTunisiaBot"
 REALNAME="moztnBot"
 #readbuffer=""
 #CHANNEL = '#esprit-libre'
 
-cmd_list=['quit','names','join']
+cmd_list = ['help','tweet','site','who']
 
 s=socket.socket( )
 s.connect((HOST, PORT))
@@ -28,16 +28,23 @@ s.send("USER %s %s bla :%s\r\n" % (IDENT, HOST, REALNAME))
 
 
 def joinChannel(msg):
-  channel = GetChannel(msg)
-  s.send("JOIN %s\r\n" % channel)
+	channel = GetChannel(msg)
+	s.send("JOIN %s\r\n" % channel)
+
+def RandMentionResponse():
+	return "Did you mention me ? what's up ?! I don't understand human language, so can you speak language I can understand ? Type !help to learn more"
 
 def MakeAction(msg):
-  if(msg.find('PRIVMSG') is not -1):
-     return 1
-  elif(msg.find('INVITE') is not -1):
-     return 2
-  else:
-     return 0
+	if(msg.find('PRIVMSG') is not -1):
+		if(msg.find('hello') >-1 or msg.find('Hello') > -1):
+			s.send("PRIVMSG %s :Hello %s :) How are you ? How can I help you ?\r\n" % (GetChannel(msg),GetUname(msg)))
+			return
+		if(msg.find('moztn') is not -1):
+			s.send("PRIVMSG %s :%s, %s\r\n" % (GetChannel(msg),GetUname(msg),RandMentionResponse())) 
+
+	if(msg.find('INVITE') is not -1):
+		joinChannel(msg)
+
 
 def GetMsg(msg):
   msg = msg[msg.find('PRIVMSG'):]
@@ -56,8 +63,6 @@ def GetChannel(msg):
     return msg[:msg.find(':')-1]
   
 def printMsg(msg):
-  if(msg.find(' hi') >-1 or msg.find('hello') >-1 or msg.find('Hello') > -1):
-    s.send("PRIVMSG %s :Hello %s :) How are you ? How can I help you ?\r\n" % (GetChannel(msg),GetUname(msg)))
   print '@'+GetUname(msg)+': '+GetMsg(msg)
 
     
@@ -68,12 +73,8 @@ def run():
   temp=string.split(readbuffer, "\n")
   readbuffer=temp.pop( )
   print temp
-  if(MakeAction(temp[0]) is 1):
-      printMsg(temp[0])
-  elif(MakeAction(temp[0]) is 2):
-      joinChannel(temp[0])
-
-    #print GetMsg(temp[0])
+  MakeAction(temp[0])
+  #print GetMsg(temp[0])
   for line in temp:
       line=string.rstrip(line)
       line=string.split(line)
