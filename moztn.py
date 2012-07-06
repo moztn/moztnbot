@@ -60,52 +60,25 @@ def printMsg(msg):
     s.send("PRIVMSG %s :Hello %s :) How are you ? How can I help you ?\r\n" % (GetChannel(msg),GetUname(msg)))
   print '@'+GetUname(msg)+': '+GetMsg(msg)
 
-class PingThread(threading.Thread):
-  def __init__(self,conn):
-    threading.Thread.__init__(self)
-    self.connexion = conn
     
-  def run(self):
-   readbuffer = ""
-   while 1:
-    readbuffer=readbuffer+s.recv(1024)
-    temp=string.split(readbuffer, "\n")
-    readbuffer=temp.pop( )
-    print temp
-    if(MakeAction(temp[0]) is 1):
-        printMsg(temp[0])
-    elif(MakeAction(temp[0]) is 2):
-        joinChannel(temp[0])
+def run():
+ readbuffer = ""
+ while 1:
+  readbuffer=readbuffer+s.recv(1024)
+  temp=string.split(readbuffer, "\n")
+  readbuffer=temp.pop( )
+  print temp
+  if(MakeAction(temp[0]) is 1):
+      printMsg(temp[0])
+  elif(MakeAction(temp[0]) is 2):
+      joinChannel(temp[0])
 
     #print GetMsg(temp[0])
-    for line in temp:
-        line=string.rstrip(line)
-        line=string.split(line)
-        if(line[0]=="PING"):
-            self.connexion.send("PONG %s\r\n" % line[1])
+  for line in temp:
+      line=string.rstrip(line)
+      line=string.split(line)
+      if(line[0]=="PING"):
+          s.send("PONG %s\r\n" % line[1])
             
-class InputThread(threading.Thread):
-  def __init__(self,conn):
-    threading.Thread.__init__(self)
-    self.connexion = conn
-    
-  def run(self):
-    while 1:
-      msg = raw_input()
-      #print msg
-      smsg = msg.split(' ')
-      if(smsg[0] in cmd_list):
-	if (smsg[0] == 'quit'):
-	  self.connexion.send('quit :*se fait absorber par un trou noir généré par une division par zéro!*\r\n')
-	  PingThread().stop()
-	  quit()
-	elif(smsg[0] == 'join'):
-	  s.send("JOIN %s\r\n" % smsg[1])
-	else:
-	  self.connexion.send('%s\r\n' % msg)
-	  
-      else:
-	req = self.connexion.send("PRIVMSG %s :%s\r\n" % (CHANNEL,msg))
 
-PingThread(s).start()
-InputThread(s).start()
+run()
