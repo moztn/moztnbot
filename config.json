@@ -1,0 +1,8 @@
+{
+	"nick":			"moztn",
+	"host":			"irc.mozilla.org",
+	"port":			6667,
+	"master":		"rednaks",
+	"ident":		"MOZTNBOT",
+	"realname":"MozTnBot"
+}
