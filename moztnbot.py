@@ -16,9 +16,10 @@ html_begin = '''<!DOCTYPE html>
 		<title>MozTn IRC log file</title>
 		<style type="text/css">
 			h3 { text-align: center }
-			body { background: #f0f0f0; line-height: 25%; }
-			.time  { color: #007020 }
-			.nick  { color: #062873; font-weight: bold }
+			body { background: #f0f0f0; }
+			body .time { color: #007020; display: inline-block; width: 75px; vertical-align: top; }
+			body .nick { color: #062873; font-weight: bold;display: inline-block; vertical-align: middle; width: 130px;vertical-align: top; }
+			body .msg { display: inline-block; width: 80%; }
 		</style>
 	</head>
 	<body>
@@ -73,7 +74,7 @@ class Message:
 
 		if(len(msg) is not 0):
 			f = open(fname,'a')
-			content = '		<p>'+'<span class="time">'+time+'</span> <span class="nick">'+uname+'</span> '+msg+'</p>\n'
+			content = '		<p>'+'<span class="time">'+time+'</span> <span class="nick"><'+uname+'> : </span> <span class="msg">'+msg+'</span></p>\n'
 			f.write(content.encode('utf-8'))
 			f.close()
 	def pushLog(self):
@@ -81,17 +82,17 @@ class Message:
 			date = getDate()
 			channel = self.GetChannel().replace('#','')
 			fname = channel+'-'+date+'.log.html'
-			return 'http://irc.mozilla-tunisia.org/log/'+date+'/'+fname
+			return 'http://irc.mozilla-tunisia.org/log/'+fname
 		except:	
 			return None
 
 
 #Config
 config = {}
-configfile = 'config.json'
+configfile = '/opt/moztnbot/config.json'
 #Messages :
 msgs = {}
-msgfile = 'msgs.json'
+msgfile = '/opt/moztnbot/msgs.json'
 #Server info :
 linkname = ''
 # Main Socket 
@@ -107,10 +108,16 @@ def Connect():
 	s.send("USER %s %s bla :%s\r\n" % (config['ident'], config['host'], config['realname']))
 
 def loadJson(fname):
-	f = open(fname, 'r')
-	fcontent = f.readlines()
-	content = json.loads(''.join(fcontent))
-	f.close()
+	try:
+		f = open(fname, 'r')
+		fcontent = f.readlines()
+		content = json.loads(''.join(fcontent))
+		f.close()
+	except:
+		f = open("/var/log/moztnbot.log", "w")
+		f.write('failed to open '+fname)
+		f.close()
+
 	return content
 
 def loadConfig():
@@ -177,7 +184,13 @@ def main_loop():
     try:
       MakeAction(temp[0].decode('utf-8'))
     except:
-      MakeAction(temp[0].decode('iso8859-1'))
+	try:
+      		MakeAction(temp[0].decode('iso8859-15'))
+	except:
+		try:
+			MakeAction(temp[0].decode('iso8859-8-I'))
+		except:
+			continue
   for line in temp:
       line=string.rstrip(line)
       line=string.split(line)

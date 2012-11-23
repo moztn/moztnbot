@@ -1,8 +1,8 @@
 {
-	"nick":			"EspLibreBot",
-	"host":			"irc.freenode.net",
+	"nick":			"moztn",
+	"host":			"irc.mozilla.org",
 	"port":			6667,
 	"master":		"rednaks",
-	"ident":		"ESPLB",
-	"realname":"EspritLibre"
+	"ident":		"MOZTNBOT",
+	"realname":"MozTnBot"
 }
