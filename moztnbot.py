@@ -8,6 +8,7 @@ import time
 import json
 import random
 import time
+import chardet
 
 html_begin = '''<!DOCTYPE html>
 <html>
@@ -181,16 +182,17 @@ def main_loop():
   readbuffer=temp.pop()
   print temp
   if(temp[0].find(linkname) is -1):
+    encType = 'utf-8'
     try:
-      MakeAction(temp[0].decode('utf-8'))
-    except:
-	try:
-      		MakeAction(temp[0].decode('iso8859-15'))
-	except:
-		try:
-			MakeAction(temp[0].decode('iso8859-8-I'))
-		except:
-			continue
+      MakeAction(temp[0].decode(encType))
+    except UnicodeDecodeError:
+      try:
+        encType = 'iso-8859-1'
+        MakeAction(temp[0].decode(encType))
+      except UnicodeDecodeError:
+        encType = chardet.detect(temp[0])['encoding']
+        MakeAction(temp[0].decode(encType))
+
   for line in temp:
       line=string.rstrip(line)
       line=string.split(line)
