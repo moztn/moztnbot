@@ -26,6 +26,8 @@ html_begin = '''<!DOCTYPE html>
 	<body>
 '''
 
+os.chdir(os.path.realpath(os.path.dirname(sys.argv[0]))) #using relative path
+
 class Message:
 	message = ''
 	def __init__(self, message):
@@ -63,7 +65,7 @@ class Message:
 	def log(self):
 		date = getDate()
 		channel = self.GetChannel().replace('#','')
-		fname = '/var/www/irc/log/'+channel+'-'+date+'.log.html'
+		fname = 'log/'+channel+'-'+date+'.log.html'
 		time = getTime()
 		uname = self.GetUname()
 		msg = self.GetMsg()
@@ -90,10 +92,10 @@ class Message:
 
 #Config
 config = {}
-configfile = '/opt/moztnbot/config.json'
+configfile = 'config.json'
 #Messages :
 msgs = {}
-msgfile = '/opt/moztnbot/msgs.json'
+msgfile = 'msgs.json'
 #Server info :
 linkname = ''
 # Main Socket 
