@@ -77,7 +77,7 @@ class Message:
 
 		if(len(msg) is not 0):
 			f = open(fname,'a')
-			content = '		<p>'+'<span class="time">'+time+'</span> <span class="nick"><'+uname+'> : </span> <span class="msg">'+msg+'</span></p>\n'
+			content = '		<p>'+'<span class="time">'+time+'</span> <span class="nick">&lt;'+uname+'&gt; : </span> <span class="msg">'+msg+'</span></p>\n'
 			f.write(content.encode('utf-8'))
 			f.close()
 	def pushLog(self):
