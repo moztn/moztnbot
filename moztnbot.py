@@ -140,8 +140,7 @@ def RandMentionResponse():
 	return msgs[str(n)]
 
 def getTime():
-	lt = time.localtime()
-	localtime = '%s:%s:%s' %(lt.tm_hour, lt.tm_min, lt.tm_sec)
+	localtime=time.strftime("%H:%M:%S", time.localtime())
 	return localtime
 
 def getDate():
