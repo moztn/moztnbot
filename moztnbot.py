@@ -179,28 +179,33 @@ def getLinkname():
 def main_loop():
  readbuffer = ""
  while 1:
-  readbuffer=readbuffer+s.recv(1024)
-  temp=string.split(readbuffer, "\n")
-  readbuffer=temp.pop()
-  print temp
-  if(temp[0].find(linkname) is -1):
-    encType = 'utf-8'
-    try:
-      MakeAction(temp[0].decode(encType))
-    except UnicodeDecodeError:
+  try:
+    readbuffer=readbuffer+s.recv(1024)
+    temp=string.split(readbuffer, "\n")
+    readbuffer=temp.pop()
+    print temp
+    if(temp[0].find(linkname) is -1):
+      encType = 'utf-8'
       try:
-        encType = 'iso-8859-1'
         MakeAction(temp[0].decode(encType))
       except UnicodeDecodeError:
-        encType = chardet.detect(temp[0])['encoding']
         try:
+          encType = 'iso-8859-1'
           MakeAction(temp[0].decode(encType))
-        except UnicodeDecodeError as e:
-          f = open("/var/log/moztnbot.log", "w")
-          f.write('[Decoding Error]: %s' % e)
-          f.close()
-          pass #temporaire pour eviter que le bot crache
-
+        except UnicodeDecodeError:
+          encType = chardet.detect(temp[0])['encoding']
+          try:
+            MakeAction(temp[0].decode(encType))
+          except UnicodeDecodeError as e:
+            f = open("/var/log/moztnbot.log", "w")
+            f.write('[Decoding Error]: %s' % e)
+            f.close()
+            pass #temporaire pour eviter que le bot crache
+  except Exception as e:
+      f = open("/var/log/moztnbot.log", "w")
+      f.write('[CRITICAL]: %s' % e)
+      f.close()
+  
   for line in temp:
       line=string.rstrip(line)
       line=string.split(line)
