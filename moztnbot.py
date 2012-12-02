@@ -117,7 +117,7 @@ def loadJson(fname):
 		content = json.loads(''.join(fcontent))
 		f.close()
 	except:
-		f = open("/var/log/moztnbot.log", "w")
+		f = open("/var/log/moztnbot.log", "a")
 		f.write('failed to open '+fname)
 		f.close()
 
@@ -202,7 +202,7 @@ def main_loop():
             f.close()
             pass #temporaire pour eviter que le bot crache
   except Exception as e:
-      f = open("/var/log/moztnbot.log", "w")
+      f = open("/var/log/moztnbot.log", "a")
       f.write('[CRITICAL]: %s' % e)
       f.close()
   
