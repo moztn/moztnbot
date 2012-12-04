@@ -63,10 +63,14 @@ class Message:
   			print time+' @'+uname+': '+msg
 
 	def log(self):
+		directory='log/'+time.strftime("%Y",time.localtime())+'/'+time.strftime("%b",time.localtime())
+		if not os.path.isdir(directory):
+			os.makedirs(directory)
+
 		date = getDate()
 		channel = self.GetChannel().replace('#','')
-		fname = 'log/'+channel+'-'+date+'.log.html'
-		time = getTime()
+		fname = directory+'/'+channel+'-'+date+'.log.html'
+		t = getTime()
 		uname = self.GetUname()
 		msg = self.GetMsg()
 		if(not os.path.exists(fname)):
@@ -77,7 +81,7 @@ class Message:
 
 		if(len(msg) is not 0):
 			f = open(fname,'a')
-			content = '		<p>'+'<span class="time">'+time+'</span> <span class="nick">&lt;'+uname+'&gt; : </span> <span class="msg">'+msg+'</span></p>\n'
+			content = '		<p>'+'<span class="time">'+t+'</span> <span class="nick">&lt;'+uname+'&gt; : </span> <span class="msg">'+msg+'</span></p>\n'
 			f.write(content.encode('utf-8'))
 			f.close()
 	def pushLog(self):
