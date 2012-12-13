@@ -203,7 +203,7 @@ def main_loop():
             encType = chardet.detect(temp[0])['encoding']
             MakeAction(temp[0].decode(encType))
           except Exception as e:
-            f = open("/var/log/moztnbot.log", "w")
+            f = open("/var/log/moztnbot.log", "a")
             f.write('[Decoding Error]: %s' % e)
             f.close()
             pass #temporaire pour eviter que le bot crache
