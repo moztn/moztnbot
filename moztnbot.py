@@ -190,19 +190,23 @@ def main_loop():
     encType = 'utf-8'
     try:
       MakeAction(temp[0].decode(encType))
-    except UnicodeDecodeError:
+    except:
       try:
         encType = 'iso-8859-1'
         MakeAction(temp[0].decode(encType))
-      except UnicodeDecodeError:
-        encType = chardet.detect(temp[0])['encoding']
+      except:
+        encType = 'ascii'
         try:
           MakeAction(temp[0].decode(encType))
-        except UnicodeDecodeError as e:
-          f = open("/var/log/moztnbot.log", "w")
-          f.write('[Decoding Error]: %s' % e)
-          f.close()
-          pass #temporaire pour eviter que le bot crache
+        except:
+          try:
+            encType = chardet.detect(temp[0])['encoding']
+            MakeAction(temp[0].decode(encType))
+          except Exception as e:
+            f = open("/var/log/moztnbot.log", "w")
+            f.write('[Decoding Error]: %s' % e)
+            f.close()
+            pass #temporaire pour eviter que le bot crache
 
   for line in temp:
       line=string.rstrip(line)
