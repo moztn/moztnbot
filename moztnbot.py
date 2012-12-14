@@ -86,10 +86,11 @@ class Message:
 			f.close()
 	def pushLog(self):
 		try:
+			directory='log/'+time.strftime("%Y",time.localtime())+'/'+time.strftime("%b",time.localtime())
 			date = getDate()
 			channel = self.GetChannel().replace('#','')
-			fname = channel+'-'+date+'.log.html'
-			return 'http://irc.mozilla-tunisia.org/log/'+fname
+			fname = directory+'/'+channel+'-'+date+'.log.html'
+			return 'http://irc.mozilla-tunisia.org/'+fname
 		except:	
 			return None
 
