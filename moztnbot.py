@@ -153,6 +153,37 @@ def getDate():
 	date = '%s-%s-%s' %(lt.tm_year, lt.tm_mon, lt.tm_mday)
 	return date
 
+def decodeMsg(msg):
+        #First we try to decode from ascii : 
+        decodedMsg = ''
+        try:
+                decodedMsg = msg.decode('ascii')
+        except:
+        #if not : try utf-8
+                try:
+                        decodedMsg = msg.decode('utf-8')
+                except:
+                        try:
+                                decodedMsg = msg.decode('iso-8859-1')
+                        except:
+                                #if it didn't work, last chance, we try to detect the encoding type with chardet
+                                try:
+                                        encType = chatdet.decode(msg)['encoding']
+                                        decodedMsg = msg.decode(enType)
+                                except:
+                                #Okey fine, we decode manually
+                                        for c in msg:
+                                                buf_c = ''
+                                                try:
+                                                        buf_c = l.decode('utf-8') 
+                                                except:
+                                                        buf_c = '*' # we replace characters that won't decode
+                                                decodedMsg += buf_c  
+          
+        # and then we return the decoded MSG 
+        return decodedMsg 
+
+
 def MakeAction(msg):
 	message = Message(msg)
 	message.printMsg()
@@ -188,26 +219,12 @@ def main_loop():
   readbuffer=temp.pop()
   print temp
   if(temp[0].find(linkname) is -1):
-    encType = 'utf-8'
     try:
-      MakeAction(temp[0].decode(encType))
-    except:
-      try:
-        encType = 'iso-8859-1'
-        MakeAction(temp[0].decode(encType))
-      except:
-        encType = 'ascii'
-        try:
-          MakeAction(temp[0].decode(encType))
-        except:
-          try:
-            encType = chardet.detect(temp[0])['encoding']
-            MakeAction(temp[0].decode(encType))
-          except Exception as e:
-            f = open("/var/log/moztnbot.log", "a")
-            f.write('[Decoding Error]: %s' % e)
-            f.close()
-            pass #temporaire pour eviter que le bot crache
+      MakeAction(decodeMsg(temp[0]))
+    except Exception as e:
+      f = open("/var/log/moztnbot.log", "a")
+      f.write('[Decoding Error]: %s' % e)
+      f.close() 
 
   for line in temp:
       line=string.rstrip(line)
