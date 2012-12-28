@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
+
+# Please do not use tab for indentation, use 2 spaces instead !
+
 import sys, os.path
 import socket
 import string
