@@ -177,10 +177,10 @@ def decodeMsg(msg):
         #Okey fine, we decode manually
           for c in msg:
             buf_c = ''
-              try:
-                buf_c = l.decode('utf-8') 
-              except:
-                buf_c = '*' # we replace characters that won't decode
+            try:
+              buf_c = l.decode('utf-8') 
+            except:
+              buf_c = '*' # we replace characters that won't decode
             decodedMsg += buf_c  
 
 
