@@ -157,34 +157,35 @@ def getDate():
   return date
 
 def decodeMsg(msg):
-        #First we try to decode from ascii : 
-        decodedMsg = ''
+  #First we try to decode from ascii : 
+  decodedMsg = ''
+  try:
+    decodedMsg = msg.decode('ascii')
+  except:
+  #if not : try utf-8
+    try:
+      decodedMsg = msg.decode('utf-8')
+    except:
+      try:
+        decodedMsg = msg.decode('iso-8859-1')
+      except:
+      #if it didn't work, last chance, we try to detect the encoding type with chardet
         try:
-                decodedMsg = msg.decode('ascii')
+          encType = chatdet.decode(msg)['encoding']
+          decodedMsg = msg.decode(enType)
         except:
-        #if not : try utf-8
-                try:
-                        decodedMsg = msg.decode('utf-8')
-                except:
-                        try:
-                                decodedMsg = msg.decode('iso-8859-1')
-                        except:
-                                #if it didn't work, last chance, we try to detect the encoding type with chardet
-                                try:
-                                        encType = chatdet.decode(msg)['encoding']
-                                        decodedMsg = msg.decode(enType)
-                                except:
-                                #Okey fine, we decode manually
-                                        for c in msg:
-                                                buf_c = ''
-                                                try:
-                                                        buf_c = l.decode('utf-8') 
-                                                except:
-                                                        buf_c = '*' # we replace characters that won't decode
-                                                decodedMsg += buf_c  
-          
-        # and then we return the decoded MSG 
-        return decodedMsg 
+        #Okey fine, we decode manually
+          for c in msg:
+            buf_c = ''
+            try:
+              buf_c = l.decode('utf-8') 
+            except:
+              buf_c = '*' # we replace characters that won't decode
+            decodedMsg += buf_c  
+
+
+  # and then we return the decoded MSG 
+  return decodedMsg 
 
 
 def MakeAction(msg):
