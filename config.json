@@ -4,5 +4,6 @@
 	"port":			6667,
 	"master":		"rednaks",
 	"ident":		"MOZTNBOT",
-	"realname":"MozTnBot"
+	"realname":"MozTnBot",
+  "repo":"https://github.com/moztn/moztnbog.git"
 }
