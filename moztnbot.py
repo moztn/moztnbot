@@ -200,7 +200,7 @@ def MakeAction(msg):
       s.send("PRIVMSG %s :%s, %s\r\n" % (message.GetChannel(),message.GetUname(),RandMentionResponse())) 
       s.send("PRIVMSG %s :%s, %s\r\n" % (message.GetChannel(),message.GetUname(),"Type \x02!help\x02 to learn more.")) 
     if(message.contains('!help')):
-      s.send("PRIVMSG %s :%s, Sorry, my master is too lasy to implement this :( you can maybe help on https://github.com/rednaks/EspritLibreBot ?\r\n" % (message.GetChannel(),message.GetUname()))
+      s.send("PRIVMSG %s :%s, Sorry, my master is too lasy to implement this :( you can maybe help on https://github.com/moztn/moztnbot.git ?\r\n" % (message.GetChannel(),message.GetUname()))
     if(message.contains('!log')):
       url = message.pushLog()
       if(url is not None):
