@@ -125,7 +125,7 @@ def loadJson(fname):
     content = json.loads(''.join(fcontent))
     f.close()
   except:
-    f = open("/var/log/moztnbot.log", "w")
+    f = open("/var/log/moztnbot.log", "a")
     f.write('failed to open '+fname)
     f.close()
 
