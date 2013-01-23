@@ -126,7 +126,7 @@ def loadJson(fname):
     f.close()
   except:
     f = open("/var/log/moztnbot.log", "a")
-    f.write('failed to open '+fname)
+    f.write('failed to open %s \n' %fname)
     f.close()
 
   return content
@@ -229,7 +229,7 @@ def main_loop():
       MakeAction(decodeMsg(temp[0]))
     except Exception as e:
       f = open("/var/log/moztnbot.log", "a")
-      f.write('[Decoding Error]: %s' % e)
+      f.write('[Decoding Error]: %s\n' % e)
       f.close() 
 
   for line in temp:
