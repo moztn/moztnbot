@@ -125,7 +125,7 @@ def loadJson(fname):
     content = json.loads(''.join(fcontent))
     f.close()
   except:
-    f = open("/var/log/moztnbot.log", "w")
+    f = open("/var/log/moztnbot.log", "a")
     f.write('failed to open '+fname)
     f.close()
 
@@ -207,7 +207,7 @@ def MakeAction(msg):
         s.send("PRIVMSG %s :%s you can find the log here : %s\r\n" % (message.GetChannel(),message.GetUname(),url))
       else:
         s.send("PRIVMSG %s :%s Sorry unable to get log please contact my master\r\n" % (message.GetChannel(), message.GetUname()))
-  if(message.contains('INVITE') and message.GetUname==config['master']):
+  if(message.contains('INVITE') and message.GetUname() == config['master']):
     joinChannel(msg)
   else:
     s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
