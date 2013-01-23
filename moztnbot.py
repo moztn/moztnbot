@@ -207,10 +207,11 @@ def MakeAction(msg):
         s.send("PRIVMSG %s :%s you can find the log here : %s\r\n" % (message.GetChannel(),message.GetUname(),url))
       else:
         s.send("PRIVMSG %s :%s Sorry unable to get log please contact my master\r\n" % (message.GetChannel(), message.GetUname()))
-  if(message.contains('INVITE') and message.GetUname() == config['master']):
-    joinChannel(msg)
-  else:
-    s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
+  if(message.contains('INVITE')):
+    if(message.GetUname() == config['master']):
+      joinChannel(msg)
+    else:
+      s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
 
 def getLinkname():
   buff = s.recv(1024)
