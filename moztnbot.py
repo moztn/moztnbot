@@ -126,7 +126,7 @@ def loadJson(fname):
     f.close()
   except:
     f = open("/var/log/moztnbot.log", "a")
-    f.write('failed to open '+fname)
+    f.write('failed to open %s \n' %fname)
     f.close()
 
   return content
@@ -207,10 +207,11 @@ def MakeAction(msg):
         s.send("PRIVMSG %s :%s you can find the log here : %s\r\n" % (message.GetChannel(),message.GetUname(),url))
       else:
         s.send("PRIVMSG %s :%s Sorry unable to get log please contact my master\r\n" % (message.GetChannel(), message.GetUname()))
-  if(message.contains('INVITE') and message.GetUname() == config['master']):
-    joinChannel(msg)
-  else:
-    s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
+  if(message.contains('INVITE')):
+    if(message.GetUname() == config['master']):
+      joinChannel(msg)
+    else:
+      s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
 
 def getLinkname():
   buff = s.recv(1024)
@@ -229,7 +230,7 @@ def main_loop():
       MakeAction(decodeMsg(temp[0]))
     except Exception as e:
       f = open("/var/log/moztnbot.log", "a")
-      f.write('[Decoding Error]: %s' % e)
+      f.write('[Decoding Error]: %s\n' % e)
       f.close() 
 
   for line in temp:
