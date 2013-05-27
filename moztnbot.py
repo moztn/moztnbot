@@ -143,6 +143,13 @@ def joinChannel(msg):
   channel = Message(msg).GetChannel()
   s.send("JOIN %s\r\n" % channel)
 
+def isRegistered(uname):
+  s.send("WHOIS %s\r\n" % uname)
+  buff = s.recv(1024)
+  if(buff.find('is a registered nick') != -1):
+    return True
+  return False
+
 def RandMentionResponse():
   n = random.randrange(1,len(msgs)+1)
   return msgs[str(n)]
@@ -208,7 +215,8 @@ def MakeAction(msg):
       else:
         s.send("PRIVMSG %s :%s Sorry unable to get log please contact my master\r\n" % (message.GetChannel(), message.GetUname()))
   if(message.contains('INVITE')):
-    if(message.GetUname() == config['master']):
+    hostUser = message.GetUname()
+    if(hostUser == config['master'] and isRegistered(hostUser)):
       joinChannel(msg)
     else:
       s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
