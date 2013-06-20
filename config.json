@@ -5,5 +5,6 @@
 	"master":		"rednaks",
 	"ident":		"MOZTNBOT",
 	"realname":"MozTnBot",
-	"repo":"https://github.com/moztn/moztnbog.git"
+	"repo":"https://github.com/moztn/moztnbog.git",
+	"wiki":"http://wiki.mozilla-tunisia.org/BotIRC"
 }
