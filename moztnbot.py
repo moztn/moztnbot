@@ -12,6 +12,7 @@ import json
 import random
 import time
 import chardet
+import re
 
 html_begin = '''<!DOCTYPE html>
 <html>
@@ -156,6 +157,16 @@ def getDate():
   date = '%s-%s-%s' %(lt.tm_year, lt.tm_mon, lt.tm_mday)
   return date
 
+def getBug(msg):
+  obj = re.search('.*?([b|B][u|U][g|G]).*?(\d+)', msg)
+  if(obj):
+    bugNumber = obj.group(2)
+    url = 'https://bugzilla.mozilla.org/show_bug.cgi?id=%s' %bugNumber
+    return url 
+  else:
+    return None
+
+
 def decodeMsg(msg):
   #First we try to decode from ascii : 
   decodedMsg = ''
@@ -212,6 +223,11 @@ def MakeAction(msg):
       joinChannel(msg)
     else:
       s.send("PRIVMSG %s :%s Sorry you are not my master.You can't invite me !\r\n" % (message.GetUname(), message.GetUname()))
+  if(message.contains('bug')):
+    url = getBug(message.GetMsg())
+    if(url):
+      s.send('PRIVMSG %s :%s\r\n' % (message.GetChannel(), url))
+
 
 def getLinkname():
   buff = s.recv(1024)
