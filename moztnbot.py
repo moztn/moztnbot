@@ -12,6 +12,7 @@ import json
 import random
 import time
 import chardet
+import codecs
 import re
 
 html_begin = '''<!DOCTYPE html>
@@ -179,35 +180,20 @@ def getBug(msg):
 
 
 def decodeMsg(msg):
-  #First we try to decode from ascii : 
-  decodedMsg = ''
-  try:
-    decodedMsg = msg.decode('ascii')
-  except:
-  #if not : try utf-8
+
+  charsets = ['utf-8', chardet.detect(msg)['encoding']]
+  decodedMsg = None
+  for c in charsets:
     try:
-      decodedMsg = msg.decode('utf-8')
-    except:
-      try:
-        decodedMsg = msg.decode('iso-8859-1')
-      except:
-      #if it didn't work, last chance, we try to detect the encoding type with chardet
-        try:
-          encType = chatdet.decode(msg)['encoding']
-          decodedMsg = msg.decode(enType)
-        except:
-        #Okey fine, we decode manually
-          for c in msg:
-            buf_c = ''
-            try:
-              buf_c = c.decode('utf-8') 
-            except:
-              buf_c = '*' # we replace characters that won't decode
-            decodedMsg += buf_c  
+      decodedMsg = codecs.decode(msg, c)
+    except UnicodeDecodeError as e:
+      pass
+    
+    if (decodedMsg is not None):
+      print "Yes ! decoded with {} @ {}.".format(c, charsets.index(c))
+      return decodedMsg
 
-
-  # and then we return the decoded MSG 
-  return decodedMsg 
+    return codecs.decode(msg, 'utf-8', 'ignore')
 
 
 def MakeAction(msg):
@@ -255,7 +241,12 @@ def main_loop():
   print temp
   if(temp[0].find(linkname) is -1):
     try:
-      MakeAction(decodeMsg(temp[0]))
+      res = decodeMsg(temp[0])
+      if(res is not None):
+        MakeAction(res)
+      else:
+        raise Exception, 'Unable to decode'
+
     except Exception as e:
       f = open("/var/log/moztnbot.log", "a")
       f.write('[Decoding Error]: %s\n' % e)
