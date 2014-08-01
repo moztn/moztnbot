@@ -45,7 +45,7 @@ class Message:
     if(sensitive == False):
       upperMessage = self.message.upper()
       upperWord = word.upper()
-      return upperMessage(upperWord) != -1
+      return upperMessage.find(upperWord) != -1
     return self.message.find(word) != -1
 
   def GetMsg(self):
